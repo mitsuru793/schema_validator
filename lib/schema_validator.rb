@@ -58,10 +58,17 @@ module SchemaValidator
       if Enumerable === value
         schema[index] = build_schema(value)
       else
-        if value == "URI.regexp"
+        case value
+        when "URI.regexp"
           schema[index] = @uri_re
+        when String
+          if /\/.*\//.match(value)
+            schema[index] = Regexp.new(value[1..-2])
+          else
+            schema[index] = get_class_from_string(value)
+          end
         else
-          schema[index] = String === value ? get_class_from_string(value) : value
+          schema[index] = value
         end
       end
     end

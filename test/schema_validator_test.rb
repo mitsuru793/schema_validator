@@ -54,6 +54,13 @@ class ValidatorTest < Test::Unit::TestCase
     assert @validator.schema["prop"]["url"]  == URI.regexp
   end
 
+  test "build regexp when load yaml" do
+    @validator.load_yaml(File.expand_path('./test/fixtures/regexp_schema.yml'))
+    assert @validator.schema["pascal_case"] == /^([A-Z][a-z]*)*$/
+    assert @validator.valid?("pascal_case" => "CamelCase")
+    assert_false @validator.valid?("pascal_case" => "pascalcase")
+  end
+
   test "reset schema when set" do
     @validator.schema = { name: String, id: Integer }
     @validator.schema = { date: Date }
