@@ -41,6 +41,35 @@ validator.valid?({ name: "mike" })
 # => false
 ```
 
+### Array/Hashの値に文字列を指定した場合
+YAMLでスキーマを簡単に定義できるように、valueの文字列は特殊扱いされます。
+
+基本、クラス名として扱われます。クラス名の一文字は大文字にして下さい。
+
+```yaml
+# ○
+- Integer
+- String
+id: Integer
+name: String
+
+# ☓
+- integer
+name: string
+```
+
+モジュールにある定数を指定することもできます。
+
+```yaml
+url: Net::HTTP
+```
+
+正規表現を使う場合は前後に/（スラッシュ）を入れて下さい。正規表現オブジェクトに変換されます。
+
+```yaml
+full-name: /[A-Z][a-z]* [A-Z][a-z]*/
+```
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
