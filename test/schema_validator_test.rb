@@ -5,6 +5,7 @@ class ValidatorTest < Test::Unit::TestCase
   def setup
     @validator = Validator.new
   end
+
   test "#get_class_from_string" do
     true_pattern = [
       ["String",    String],
@@ -98,6 +99,18 @@ class ValidatorTest < Test::Unit::TestCase
     @validator.schema = { name: /[A-Z][a-z]/ }
     assert @validator.valid?({ name: "Mike" })
     assert_false @validator.valid?({ name: "mike" })
+
+    @validator.schema = { id: Integer }
+    assert_false @validator.valid?(id: "1")
+
+    block_pass_flg = nil
+    @validator.valid?(id: 1) { block_pass_flg = true }
+    assert_nil block_pass_flg
+
+    @validator.valid?(id: "1") do |target_value, schema|
+      assert_equal target_value, "1"
+      assert_equal schema, Integer
+    end
   end
 
   test "#initialize" do

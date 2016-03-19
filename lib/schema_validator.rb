@@ -20,17 +20,17 @@ module SchemaValidator
       @schema = build_schema(schema_hash)
     end
 
-    def valid?(target, schema=@schema)
-      case target
+    def valid?(target_value, schema=@schema, &block)
+      case target_value
         when Hash
-          target.all? { |k, v| valid?(v, schema[k]) }
+          target_value.all? { |k, v| valid?(v, schema[k], &block) }
         when Array
-          target.all? { |v| valid?(v, schema[target.index(v)]) }
+          target_value.all? { |v| valid?(v, schema[target_value.index(v)], &block) }
         else
-          if schema === target
+          if schema === target_value
             true
           else
-            puts "#{target} is not #{schema}"
+            yield(target_value, schema) if block_given?
             false
           end
       end
