@@ -51,6 +51,8 @@ module SchemaValidator
         schema.each_with_index do |v, i|
           change_schema_value(schema, i, v)
         end
+      else
+        @schema = schema
       end
     end
 
